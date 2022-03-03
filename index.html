@@ -21,21 +21,114 @@
     />
   </head>
   <body>
-    <form class="form_container">
+    <form id="form_container" class="mx-auto my-4">
+      <div class="bg-light pd-4" id="heading">
+        <h1>Survey Form</h1>
+        <p>Please take a few minutes to fill out the below form</p>
+      </div>
+      <div class="inner-form">
         <div class="form-group">
-          <label for="exampleInputEmail1">Email address</label>
-          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+          <label for="InputEmail1">Email address</label>
+          <input
+            type="email"
+            class="form-control"
+            id="InputEmail1"
+            aria-describedby="emailHelp"
+            placeholder="Enter email"
+          />
+          <small id="emailHelp" class="form-text text-muted"
+            >We'll never share your email with anyone else.</small
+          >
         </div>
+
         <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+          <label for="exampleRadios1"> How often do you play games?</label>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="exampleRadios"
+              id="exampleRadios1"
+              value="option1"
+              checked
+            />
+            <label class="form-check-label" for="exampleRadios1">
+              Never
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option2">
+            <label class="form-check-label" for="exampleRadios1">
+              Rarely (can’t remember the last time)
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option3">
+            <label class="form-check-label" for="exampleRadios1">
+              Sometimes (not regularly)
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option4">
+            <label class="form-check-label" for="exampleRadios1">
+              Often (weekly)
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option5">
+            <label class="form-check-label" for="exampleRadios2">
+              Daily
+            </label>
+          </div>
         </div>
-        <div class="form-group form-check">
-          <input type="checkbox" class="form-check-input" id="exampleCheck1">
-          <label class="form-check-label" for="exampleCheck1">Check me out</label>
+
+        <div class="form-group">
+          <label for="radioquestions"> Please confirm your age:</label>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="exampleRadios2"
+              id="exampleRadios2"
+              value="option1"
+              checked
+            />
+            <label class="form-check-label" for="exampleRadios2">
+              Less than 15
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios2" id="exampleRadios2" value="option2">
+            <label class="form-check-label" for="exampleRadios2">
+              15-20
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios2" id="exampleRadios2" value="option3">
+            <label class="form-check-label" for="exampleRadios2">
+              20-25
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios2" id="exampleRadios2" value="option3">
+            <label class="form-check-label" for="exampleRadios2">
+              25+
+            </label>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
+
+        <div class="form-group">
+          <label for="exampleFormControlTextarea1"
+            >Describe your experience with Purple Buccaneers</label
+          >
+          <textarea
+            class="form-control"
+            id="exampleFormControlTextarea1"
+            rows="3"
+          ></textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
   </body>
 </html>
