@@ -20,16 +20,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const validateStep = () => {
         const currentFormStep = formSteps[currentStep];
-        const inputs = currentFormStep.querySelectorAll('input[required]');
+        const inputs = currentFormStep.querySelectorAll('input[required], input[type="number"]');
+        const choiceGroups = currentFormStep.querySelectorAll('[data-required="true"]');
         let isValid = true;
+
         inputs.forEach(input => {
-            if (!input.value) {
+            const errorMessage = input.nextElementSibling;
+            if (input.type === 'email') {
+                const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                if (!emailRegex.test(input.value)) {
+                    isValid = false;
+                    input.style.borderColor = 'red';
+                    errorMessage.textContent = input.dataset.error;
+                } else {
+                    input.style.borderColor = '#ccc';
+                    errorMessage.textContent = '';
+                }
+            } else if (input.type === 'number') {
+                if (input.value === '' || input.value < 0) {
+                    isValid = false;
+                    input.style.borderColor = 'red';
+                    errorMessage.textContent = input.dataset.error;
+                } else {
+                    input.style.borderColor = '#ccc';
+                    errorMessage.textContent = '';
+                }
+            } else if (input.required && !input.value) {
                 isValid = false;
                 input.style.borderColor = 'red';
+                errorMessage.textContent = input.dataset.error;
             } else {
                 input.style.borderColor = '#ccc';
+                errorMessage.textContent = '';
             }
         });
+
+        choiceGroups.forEach(group => {
+            const choices = group.querySelectorAll('input[type="radio"], input[type="checkbox"]');
+            const errorMessage = group.querySelector('.error-message');
+            if ([...choices].every(choice => !choice.checked)) {
+                isValid = false;
+                if (errorMessage) {
+                    errorMessage.textContent = "Please select an option.";
+                }
+            } else {
+                if (errorMessage) {
+                    errorMessage.textContent = "";
+                }
+            }
+        });
+
         return isValid;
     };
 
@@ -58,8 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         if (validateStep()) {
-            // Handle form submission
-            console.log('Form submitted!');
+            form.style.display = 'none';
+            document.getElementById('progress-bar').style.display = 'none';
+            document.getElementById('success-message').style.display = 'block';
         }
     });
 

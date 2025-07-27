@@ -34,7 +34,9 @@
               aria-describedby="emailHelp"
               placeholder="Enter email"
               required
+              data-error="Please enter a valid email address."
             />
+            <div class="error-message"></div>
             <small id="emailHelp" class="form-text text-muted"
               >We'll never share your email with anyone else.</small
             >
@@ -45,7 +47,7 @@
         </div>
 
         <div class="form-step">
-          <div class="form-group">
+          <div class="form-group" data-required="true">
             <label for="exampleRadios1"> How often do you play games?</label>
             <div class="form-check">
               <input
@@ -116,7 +118,7 @@
         </div>
 
         <div class="form-step">
-          <div class="form-group">
+          <div class="form-group" data-required="true">
             <label>What is your favorite gaming genre?</label>
             <div class="form-check">
               <input class="form-check-input" type="radio" name="genre" id="genreAction" value="action">
@@ -146,7 +148,7 @@
         </div>
 
         <div class="form-step">
-          <div class="form-group">
+          <div class="form-group" data-required="true">
             <label>What gaming platforms do you own?</label>
             <div class="form-check">
               <input class="form-check-input" type="checkbox" name="platform" id="platformPC" value="pc">
@@ -178,7 +180,8 @@
         <div class="form-step">
           <div class="form-group">
             <label>How many hours a week do you typically play games?</label>
-            <input type="number" class="form-control" name="hoursPlayed" min="0">
+            <input type="number" class="form-control" name="hoursPlayed" min="0" data-error="Please enter a valid number of hours.">
+            <div class="error-message"></div>
           </div>
           <div class="btn-group">
             <button type="button" class="btn prev-btn">Previous</button>
@@ -198,7 +201,7 @@
         </div>
 
         <div class="form-step">
-          <div class="form-group">
+          <div class="form-group" data-required="true">
             <label>What do you look for in a new game? (Select all that apply)</label>
             <div class="form-check">
               <input class="form-check-input" type="checkbox" name="newGameFeatures" id="featureStory" value="story">
@@ -240,6 +243,10 @@
           </div>
         </div>
       </form>
+      <div id="success-message" style="display: none;">
+        <h2>Thank you for your submission!</h2>
+        <p>Your feedback is valuable to us.</p>
+      </div>
     </div>
     <script src="./src/script.js"></script>
   </body>
