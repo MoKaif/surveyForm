@@ -1,4 +1,3 @@
-
 :root {
   --primary-color: #6a5af9;
   --secondary-color: #f7f7f7;
@@ -15,7 +14,8 @@
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: var(--secondary-color);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(./pattern-design.jpg);
+  background-size: cover;
   color: var(--text-color);
 }
 
@@ -26,6 +26,18 @@ body {
   border-radius: 15px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 #heading {
@@ -38,14 +50,25 @@ body {
 #heading h1 {
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
+  font-weight: 700;
 }
 
 .inner-form {
-  padding: 2rem;
+  padding: 3rem;
 }
 
 .form-step {
   display: none;
+  animation: fadeInStep 0.5s ease-in-out;
+}
+
+@keyframes fadeInStep {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .form-step.active {
@@ -58,8 +81,9 @@ body {
 
 .form-group label {
   display: block;
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
 }
 
 .form-control {
@@ -171,5 +195,6 @@ body {
   width: 0%;
   height: 100%;
   background-color: var(--primary-color);
-  transition: width 0.3s;
+  transition: width 0.5s ease-in-out;
+  border-radius: 5px;
 }
