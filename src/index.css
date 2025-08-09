@@ -1,0 +1,33 @@
+body {
+  font-family: "Segoe UI", "Roboto", "Arial", sans-serif;
+  background: #f4f6fa;
+  margin: 0;
+  color: #222;
+}
+
+a {
+  color: #3498db;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+@media (max-width: 700px) {
+  body {
+    font-size: 15px;
+  }
+  .cta-btn {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
+}
