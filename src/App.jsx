@@ -1,16 +1,15 @@
 // App.js - Entry point for the React app
 import React, { useEffect, useState, createContext } from "react";
+import { Toaster } from 'react-hot-toast';
 import AppRouter from "./AppRouter";
 import { getCurrentUser, logout } from "./services/auth";
 import Loader from "./components/Loader";
-import Toast from "./components/Toast";
 
 export const AppContext = createContext();
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [toast, setToast] = useState({ message: "", type: "info" });
 
   useEffect(() => {
     getCurrentUser()
@@ -24,26 +23,49 @@ function App() {
     try {
       await logout();
       setUser(null);
-      setToast({ message: "Logged out successfully", type: "success" });
     } catch (err) {
-      setToast({ message: err.message || "Logout failed", type: "error" });
+      console.error('Logout failed:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  const showToast = (message, type = "info") => setToast({ message, type });
-
   return (
     <AppContext.Provider
-      value={{ user, setUser, loading, setLoading, showToast, handleLogout }}
+      value={{ user, setUser, loading, setLoading, handleLogout }}
     >
       {loading && <Loader />}
       <AppRouter />
-      <Toast
-        message={toast.message}
-        type={toast.type}
-        onClose={() => setToast({ message: "", type: "info" })}
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#fff',
+            color: '#374151',
+            borderRadius: '12px',
+            border: '1px solid #e5e7eb',
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+          },
+          success: {
+            style: {
+              border: '1px solid #10b981',
+            },
+            iconTheme: {
+              primary: '#10b981',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            style: {
+              border: '1px solid #ef4444',
+            },
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#fff',
+            },
+          },
+        }}
       />
     </AppContext.Provider>
   );

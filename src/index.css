@@ -1,33 +1,13 @@
-body {
-  font-family: "Segoe UI", "Roboto", "Arial", sans-serif;
-  background: #f4f6fa;
-  margin: 0;
-  color: #222;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
 
-a {
-  color: #3498db;
-  text-decoration: none;
-}
-a:hover {
-  text-decoration: underline;
-}
-
-input,
-textarea,
-select,
-button {
-  font-family: inherit;
-  font-size: 1rem;
-}
-
-@media (max-width: 700px) {
+@layer base {
   body {
-    font-size: 15px;
+    font-family: 'Inter', system-ui, sans-serif;
+    @apply bg-gradient-to-br from-slate-50 to-blue-50 text-slate-900 antialiased;
   }
-  .cta-btn {
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 10px;
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold text-slate-900;
   }
 }

@@ -1,35 +1,77 @@
-# Modern Survey Form
+# NoxForm
 
-This project is a complete overhaul of a survey form I originally built as part of the FreeCodeCamp Responsive Web Design certification three years ago. The goal was to take an old project and bring it up to modern standards, showcasing my UI/UX and frontend development skills.
+NoxForm is a modern, full-featured survey and form platform built with React, Appwrite, and Tailwind CSS. Easily create, share, and analyze surveys with a beautiful, responsive UI and real-time analytics.
 
-## Original Project
+---
 
-The original project was a simple, single-page survey form built with basic HTML and Bootstrap. You can find the original project in the `legacy` branch of this repository.
+## 🚀 Project Journey
 
-## The Overhaul
+This project began as a simple HTML & CSS survey form for a [freeCodeCamp](https://www.freecodecamp.org/) certification. Over time, it evolved into a full-blown product with authentication, analytics, a robust backend, and a premium user experience. What started as a learning exercise is now a production-ready, scalable app—showing the power of continuous learning and iteration!
 
-I completely redesigned and re-engineered the survey form to create a modern, user-friendly experience. Here are some of the key improvements:
+---
 
-### UI/UX Overhaul
+## ✨ Features
 
-*   **Modern Design:** The form has a clean, modern design with a new color scheme, typography, and layout.
-*   **Multi-Step Form:** The single-page form has been converted into a multi-step form to improve user experience, especially for longer surveys.
-*   **Progress Bar:** A progress bar shows users how far they've progressed in the survey.
-*   **Animations and Transitions:** Subtle animations and transitions make the form more dynamic and engaging.
+- Drag-and-drop survey builder
+- Real-time analytics dashboard
+- User authentication (Appwrite)
+- Custom themes and branding
+- Responsive, mobile-first design
+- Export responses as CSV
+- Secure and privacy-focused
 
-### New Features
+---
 
-*   **Client-Side Validation:** The form has robust client-side validation to provide immediate feedback to users and prevent the submission of incomplete or invalid data.
-*   **Accessibility Improvements:** The form's accessibility has been enhanced by adding ARIA attributes and ensuring proper keyboard navigation.
-*   **Engaging Questions:** The survey now includes more engaging and interesting questions related to gaming.
+## 🛠️ Tech Stack
 
-## Technologies Used
+- [React](https://react.dev/)
+- [Vite](https://vitejs.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Appwrite](https://appwrite.io/)
+- [Framer Motion](https://www.framer.com/motion/)
 
-*   HTML5
-*   CSS3
-*   JavaScript (ES6+)
+---
 
-## How to Run
+## 🚢 Deployment
 
-1.  Clone this repository.
-2.  Open the `index.html` file in your browser.
+This app is ready for deployment on GitHub Pages or any static hosting platform.
+
+### 1. Build for Production
+
+```bash
+npm run build
+```
+
+### 2. Deploy to GitHub Pages
+
+You can use [gh-pages](https://github.com/tschaub/gh-pages) or your preferred method:
+
+```bash
+npm install --save-dev gh-pages
+npm run deploy
+```
+
+Make sure to set the correct `homepage` in your `package.json` and configure your repository for GitHub Pages.
+
+---
+
+## 📚 Credits
+
+- Inspired by the freeCodeCamp curriculum
+- Built and maintained by [MoKaif](https://github.com/MoKaif)
+
+---
+
+## 📝 License
+
+MIT
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
