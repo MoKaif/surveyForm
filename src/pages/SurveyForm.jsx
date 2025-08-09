@@ -2,34 +2,54 @@ import React, { useState, useContext } from "react";
 import { AppContext } from "../App";
 import { ID, Databases } from "appwrite";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Plus, 
-  Trash2, 
-  GripVertical, 
-  Type, 
-  CheckSquare, 
-  Circle, 
-  Eye, 
-  EyeOff, 
+import {
+  Plus,
+  Trash2,
+  GripVertical,
+  Type,
+  CheckSquare,
+  Circle,
+  Eye,
+  EyeOff,
   Save,
   Settings,
   Palette,
-  ArrowLeft
+  ArrowLeft,
 } from "lucide-react";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import Badge from "../components/ui/Badge";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 const DB_ID = "68964345003049ffb81e";
 const SURVEYS_COLLECTION = "68964367002a59032b91";
 
 const questionTypes = [
-  { value: "text", label: "Text Input", icon: Type, description: "Single line text response" },
-  { value: "textarea", label: "Long Text", icon: Type, description: "Multi-line text response" },
-  { value: "mcq", label: "Multiple Choice", icon: Circle, description: "Select one option" },
-  { value: "checkbox", label: "Checkboxes", icon: CheckSquare, description: "Select multiple options" },
+  {
+    value: "text",
+    label: "Text Input",
+    icon: Type,
+    description: "Single line text response",
+  },
+  {
+    value: "textarea",
+    label: "Long Text",
+    icon: Type,
+    description: "Multi-line text response",
+  },
+  {
+    value: "mcq",
+    label: "Multiple Choice",
+    icon: Circle,
+    description: "Select one option",
+  },
+  {
+    value: "checkbox",
+    label: "Checkboxes",
+    icon: CheckSquare,
+    description: "Select multiple options",
+  },
 ];
 
 const surveyThemes = [
@@ -63,7 +83,9 @@ function SurveyForm() {
         q.id === questionId
           ? {
               ...q,
-              options: q.options.map((opt, i) => (i === optionIndex ? value : opt)),
+              options: q.options.map((opt, i) =>
+                i === optionIndex ? value : opt
+              ),
             }
           : q
       )
@@ -111,43 +133,51 @@ function SurveyForm() {
       toast.error("Survey title is required");
       return;
     }
-    
-    if (questions.some(q => !q.label.trim())) {
+
+    if (questions.some((q) => !q.label.trim())) {
       toast.error("All questions must have labels");
       return;
     }
 
     const loadingToast = toast.loading("Creating survey...");
     setLoading(true);
-    
+
     try {
       const dbModule = await import("../services/appwrite");
       const dbClient = new Databases(dbModule.default);
-      
+
       const doc = {
         title: title.trim(),
         description: description.trim(),
-        questions: JSON.stringify(questions.map(q => ({ ...q, id: undefined }))),
+        questions: JSON.stringify(
+          questions.map((q) => ({ ...q, id: undefined }))
+        ),
         userId: user && user.$id ? user.$id : "",
         theme: JSON.stringify(selectedTheme),
         createdAt: new Date().toISOString(),
       };
-      
+
       await dbClient.createDocument(
         DB_ID,
         SURVEYS_COLLECTION,
         ID.unique(),
         doc
       );
-      
+
       toast.dismiss(loadingToast);
       toast.success("Survey created successfully! 🎉");
-      
+
       // Reset form
       setTitle("");
       setDescription("");
       setQuestions([
-        { type: "text", label: "", options: [""], required: false, id: Date.now() },
+        {
+          type: "text",
+          label: "",
+          options: [""],
+          required: false,
+          id: Date.now(),
+        },
       ]);
       setSelectedTheme(surveyThemes[0]);
     } catch (err) {
@@ -165,7 +195,9 @@ function SurveyForm() {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-slate-900 mb-2">Create Survey</h1>
+              <h1 className="text-3xl font-bold text-slate-900 mb-2">
+                Create Survey
+              </h1>
               <p className="text-slate-600">
                 Build beautiful surveys with our intuitive form builder
               </p>
@@ -179,11 +211,12 @@ function SurveyForm() {
                 <Settings className="w-4 h-4 mr-2" />
                 Settings
               </Button>
-              <Button
-                variant="secondary"
-                onClick={() => setPreview(!preview)}
-              >
-                {preview ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
+              <Button variant="secondary" onClick={() => setPreview(!preview)}>
+                {preview ? (
+                  <EyeOff className="w-4 h-4 mr-2" />
+                ) : (
+                  <Eye className="w-4 h-4 mr-2" />
+                )}
                 {preview ? "Hide Preview" : "Preview"}
               </Button>
             </div>
@@ -240,7 +273,9 @@ function SurveyForm() {
           </AnimatePresence>
 
           {/* Main Content */}
-          <div className={`${showSettings ? "lg:col-span-3" : "lg:col-span-4"}`}>
+          <div
+            className={`${showSettings ? "lg:col-span-3" : "lg:col-span-4"}`}
+          >
             <Card padding="lg">
               <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Survey Basic Info */}
@@ -269,8 +304,12 @@ function SurveyForm() {
                 {/* Questions */}
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-slate-900">Questions</h3>
-                    <Badge variant="secondary">{questions.length} questions</Badge>
+                    <h3 className="text-lg font-semibold text-slate-900">
+                      Questions
+                    </h3>
+                    <Badge variant="secondary">
+                      {questions.length} questions
+                    </Badge>
                   </div>
 
                   <AnimatePresence>
@@ -308,7 +347,11 @@ function SurveyForm() {
                             <select
                               value={question.type}
                               onChange={(e) =>
-                                handleQuestionChange(question.id, "type", e.target.value)
+                                handleQuestionChange(
+                                  question.id,
+                                  "type",
+                                  e.target.value
+                                )
                               }
                               className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                             >
@@ -326,31 +369,45 @@ function SurveyForm() {
                             placeholder="Enter your question..."
                             value={question.label}
                             onChange={(e) =>
-                              handleQuestionChange(question.id, "label", e.target.value)
+                              handleQuestionChange(
+                                question.id,
+                                "label",
+                                e.target.value
+                              )
                             }
                           />
 
                           {/* Options for MCQ and Checkbox */}
-                          {(question.type === "mcq" || question.type === "checkbox") && (
+                          {(question.type === "mcq" ||
+                            question.type === "checkbox") && (
                             <div>
                               <label className="block text-sm font-medium text-slate-700 mb-2">
                                 Options
                               </label>
                               <div className="space-y-2">
                                 {question.options.map((option, optionIndex) => (
-                                  <div key={optionIndex} className="flex items-center space-x-2">
+                                  <div
+                                    key={optionIndex}
+                                    className="flex items-center space-x-2"
+                                  >
                                     <Input
                                       placeholder={`Option ${optionIndex + 1}`}
                                       value={option}
                                       onChange={(e) =>
-                                        handleOptionChange(question.id, optionIndex, e.target.value)
+                                        handleOptionChange(
+                                          question.id,
+                                          optionIndex,
+                                          e.target.value
+                                        )
                                       }
                                     />
                                     <Button
                                       type="button"
                                       variant="ghost"
                                       size="sm"
-                                      onClick={() => removeOption(question.id, optionIndex)}
+                                      onClick={() =>
+                                        removeOption(question.id, optionIndex)
+                                      }
                                       disabled={question.options.length === 1}
                                       className="text-error-600 hover:text-error-700"
                                     >
@@ -379,7 +436,11 @@ function SurveyForm() {
                               id={`required-${question.id}`}
                               checked={question.required}
                               onChange={(e) =>
-                                handleQuestionChange(question.id, "required", e.target.checked)
+                                handleQuestionChange(
+                                  question.id,
+                                  "required",
+                                  e.target.checked
+                                )
                               }
                               className="w-4 h-4 text-primary-600 border-slate-300 rounded focus:ring-primary-500"
                             />
@@ -408,7 +469,7 @@ function SurveyForm() {
 
                 {/* Submit Button */}
                 <div className="flex justify-end">
-                  <Button type="submit" variant="primary" size="lg">
+                  <Button type="submit" variant="gradient" size="lg">
                     <Save className="w-4 h-4 mr-2" />
                     Create Survey
                   </Button>
@@ -437,7 +498,9 @@ function SurveyForm() {
               >
                 <div className="p-6 border-b border-slate-200">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-slate-900">Survey Preview</h3>
+                    <h3 className="text-lg font-semibold text-slate-900">
+                      Survey Preview
+                    </h3>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -447,7 +510,10 @@ function SurveyForm() {
                     </Button>
                   </div>
                 </div>
-                <div className="p-6" style={{ backgroundColor: selectedTheme.secondary }}>
+                <div
+                  className="p-6"
+                  style={{ backgroundColor: selectedTheme.secondary }}
+                >
                   <div className="bg-white rounded-lg p-6 shadow-sm">
                     <h4 className="text-2xl font-bold text-slate-900 mb-3">
                       {title || "[Survey Title]"}
@@ -459,8 +525,11 @@ function SurveyForm() {
                       {questions.map((question, index) => (
                         <div key={question.id} className="space-y-3">
                           <label className="block text-sm font-semibold text-slate-900">
-                            {index + 1}. {question.label || `[Question ${index + 1}]`}
-                            {question.required && <span className="text-error-500 ml-1">*</span>}
+                            {index + 1}.{" "}
+                            {question.label || `[Question ${index + 1}]`}
+                            {question.required && (
+                              <span className="text-error-500 ml-1">*</span>
+                            )}
                           </label>
                           {question.type === "text" && (
                             <input
@@ -478,8 +547,15 @@ function SurveyForm() {
                           )}
                           {question.type === "mcq" &&
                             question.options.map((option, optionIndex) => (
-                              <div key={optionIndex} className="flex items-center space-x-2">
-                                <input type="radio" disabled name={`q-${question.id}`} />
+                              <div
+                                key={optionIndex}
+                                className="flex items-center space-x-2"
+                              >
+                                <input
+                                  type="radio"
+                                  disabled
+                                  name={`q-${question.id}`}
+                                />
                                 <span className="text-slate-700">
                                   {option || `[Option ${optionIndex + 1}]`}
                                 </span>
@@ -487,7 +563,10 @@ function SurveyForm() {
                             ))}
                           {question.type === "checkbox" &&
                             question.options.map((option, optionIndex) => (
-                              <div key={optionIndex} className="flex items-center space-x-2">
+                              <div
+                                key={optionIndex}
+                                className="flex items-center space-x-2"
+                              >
                                 <input type="checkbox" disabled />
                                 <span className="text-slate-700">
                                   {option || `[Option ${optionIndex + 1}]`}

@@ -1,4 +1,4 @@
-import React from "react";
+  import React from "react";
 
 function Toast({ message, type = "info", onClose }) {
   if (!message) return null;

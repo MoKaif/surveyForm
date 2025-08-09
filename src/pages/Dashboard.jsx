@@ -3,28 +3,40 @@ import { AppContext } from "../App";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Databases, Query } from "appwrite";
-import { 
-  Plus, 
-  BarChart3, 
-  Users, 
-  TrendingUp, 
-  Clock, 
-  Eye, 
-  MessageSquare, 
+import {
+  Plus,
+  BarChart3,
+  Users,
+  TrendingUp,
+  Clock,
+  Eye,
+  MessageSquare,
   Calendar,
   Search,
   Filter,
   Download,
   Share2,
   Edit,
-  Trash2
+  Trash2,
 } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+} from "recharts";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Badge from "../components/ui/Badge";
 import Input from "../components/ui/Input";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 const DB_ID = "68964345003049ffb81e";
 const SURVEYS_COLLECTION = "68964367002a59032b91";
@@ -40,27 +52,27 @@ function Dashboard() {
 
   // Sample analytics data (in a real app, this would come from API)
   const responseData = [
-    { name: 'Mon', responses: 12 },
-    { name: 'Tue', responses: 19 },
-    { name: 'Wed', responses: 25 },
-    { name: 'Thu', responses: 31 },
-    { name: 'Fri', responses: 22 },
-    { name: 'Sat', responses: 18 },
-    { name: 'Sun', responses: 15 },
+    { name: "Mon", responses: 12 },
+    { name: "Tue", responses: 19 },
+    { name: "Wed", responses: 25 },
+    { name: "Thu", responses: 31 },
+    { name: "Fri", responses: 22 },
+    { name: "Sat", responses: 18 },
+    { name: "Sun", responses: 15 },
   ];
 
   const surveyTypeData = [
-    { name: 'Customer Feedback', value: 35, color: '#3b82f6' },
-    { name: 'Product Research', value: 25, color: '#8b5cf6' },
-    { name: 'Employee Survey', value: 20, color: '#10b981' },
-    { name: 'Market Research', value: 20, color: '#f59e0b' },
+    { name: "Customer Feedback", value: 35, color: "#3b82f6" },
+    { name: "Product Research", value: 25, color: "#8b5cf6" },
+    { name: "Employee Survey", value: 20, color: "#10b981" },
+    { name: "Market Research", value: 20, color: "#f59e0b" },
   ];
 
   useEffect(() => {
     let cancelled = false;
     if (!user) return;
     setLoadingSurveys(true);
-    
+
     import("../services/appwrite").then(({ default: client }) => {
       const db = new Databases(client);
       // Fetch surveys
@@ -68,7 +80,10 @@ function Dashboard() {
         .then((res) => {
           if (cancelled) return;
           let docs = res.documents;
-          if (docs.length && Object.prototype.hasOwnProperty.call(docs[0], "userId")) {
+          if (
+            docs.length &&
+            Object.prototype.hasOwnProperty.call(docs[0], "userId")
+          ) {
             docs = docs.filter((doc) => doc.userId === user.$id);
           }
           setSurveys(docs);
@@ -96,16 +111,20 @@ function Dashboard() {
     };
   }, [user]);
 
-  const filteredSurveys = surveys.filter(survey => {
-    const matchesSearch = survey.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterStatus === "all" || 
+  const filteredSurveys = surveys.filter((survey) => {
+    const matchesSearch = survey.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesFilter =
+      filterStatus === "all" ||
       (filterStatus === "active" && survey.status === "active") ||
       (filterStatus === "draft" && survey.status === "draft");
     return matchesSearch && matchesFilter;
   });
 
   const totalResponses = responses.length;
-  const averageResponses = surveys.length > 0 ? Math.round(totalResponses / surveys.length) : 0;
+  const averageResponses =
+    surveys.length > 0 ? Math.round(totalResponses / surveys.length) : 0;
   const recentSurveys = surveys.slice(0, 3);
 
   const stats = [
@@ -115,7 +134,7 @@ function Dashboard() {
       value: surveys.length,
       change: "+12%",
       color: "text-primary-600",
-      bgColor: "bg-primary-100"
+      bgColor: "bg-primary-100",
     },
     {
       icon: MessageSquare,
@@ -123,7 +142,7 @@ function Dashboard() {
       value: totalResponses,
       change: "+23%",
       color: "text-success-600",
-      bgColor: "bg-success-100"
+      bgColor: "bg-success-100",
     },
     {
       icon: Users,
@@ -131,7 +150,7 @@ function Dashboard() {
       value: averageResponses,
       change: "+8%",
       color: "text-purple-600",
-      bgColor: "bg-purple-100"
+      bgColor: "bg-purple-100",
     },
     {
       icon: TrendingUp,
@@ -139,8 +158,8 @@ function Dashboard() {
       value: "78%",
       change: "+5%",
       color: "text-orange-600",
-      bgColor: "bg-orange-100"
-    }
+      bgColor: "bg-orange-100",
+    },
   ];
 
   return (
@@ -151,7 +170,7 @@ function Dashboard() {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div className="mb-6 lg:mb-0">
               <h1 className="text-3xl font-bold text-slate-900 mb-2">
-                Welcome back, {user?.email?.split('@')[0] || 'User'}! 👋
+                Welcome back, {user?.email?.split("@")[0] || "User"}! 👋
               </h1>
               <p className="text-slate-600">
                 Here's what's happening with your surveys today.
@@ -182,13 +201,19 @@ function Dashboard() {
                 <Card padding="lg" className="relative overflow-hidden">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-slate-600 mb-2">{stat.label}</p>
-                      <p className="text-3xl font-bold text-slate-900">{stat.value}</p>
+                      <p className="text-sm font-medium text-slate-600 mb-2">
+                        {stat.label}
+                      </p>
+                      <p className="text-3xl font-bold text-slate-900">
+                        {stat.value}
+                      </p>
                       <p className="text-sm text-success-600 font-medium mt-2">
                         {stat.change} from last month
                       </p>
                     </div>
-                    <div className={`w-12 h-12 ${stat.bgColor} rounded-xl flex items-center justify-center`}>
+                    <div
+                      className={`w-12 h-12 ${stat.bgColor} rounded-xl flex items-center justify-center`}
+                    >
                       <Icon className={`w-6 h-6 ${stat.color}`} />
                     </div>
                   </div>
@@ -203,7 +228,9 @@ function Dashboard() {
           {/* Response Trends */}
           <Card padding="lg">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-slate-900">Response Trends</h3>
+              <h3 className="text-lg font-semibold text-slate-900">
+                Response Trends
+              </h3>
               <Badge variant="primary">Last 7 days</Badge>
             </div>
             <div className="h-64">
@@ -212,12 +239,12 @@ function Dashboard() {
                   <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
                   <XAxis dataKey="name" className="text-slate-600" />
                   <YAxis className="text-slate-600" />
-                  <Line 
-                    type="monotone" 
-                    dataKey="responses" 
-                    stroke="#3b82f6" 
+                  <Line
+                    type="monotone"
+                    dataKey="responses"
+                    stroke="#3b82f6"
                     strokeWidth={3}
-                    dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
+                    dot={{ fill: "#3b82f6", strokeWidth: 2, r: 4 }}
                     activeDot={{ r: 6 }}
                   />
                 </LineChart>
@@ -228,7 +255,9 @@ function Dashboard() {
           {/* Survey Types */}
           <Card padding="lg">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-slate-900">Survey Categories</h3>
+              <h3 className="text-lg font-semibold text-slate-900">
+                Survey Categories
+              </h3>
               <Button variant="ghost" size="sm">
                 <Download className="w-4 h-4 mr-1" />
                 Export
@@ -244,7 +273,9 @@ function Dashboard() {
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    label={({ name, percent }) =>
+                      `${name} ${(percent * 100).toFixed(0)}%`
+                    }
                   >
                     {surveyTypeData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
@@ -291,13 +322,14 @@ function Dashboard() {
             <div className="text-center py-12">
               <BarChart3 className="w-16 h-16 text-slate-300 mx-auto mb-4" />
               <h4 className="text-lg font-medium text-slate-900 mb-2">
-                {searchTerm || filterStatus !== "all" ? "No surveys found" : "No surveys created yet"}
+                {searchTerm || filterStatus !== "all"
+                  ? "No surveys found"
+                  : "No surveys created yet"}
               </h4>
               <p className="text-slate-600 mb-6">
-                {searchTerm || filterStatus !== "all" 
+                {searchTerm || filterStatus !== "all"
                   ? "Try adjusting your search or filter criteria"
-                  : "Get started by creating your first survey"
-                }
+                  : "Get started by creating your first survey"}
               </p>
               {!searchTerm && filterStatus === "all" && (
                 <Link to="/create">
@@ -313,25 +345,34 @@ function Dashboard() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-slate-200">
-                    <th className="text-left py-4 px-4 font-semibold text-slate-900">Survey</th>
-                    <th className="text-left py-4 px-4 font-semibold text-slate-900">Status</th>
-                    <th className="text-left py-4 px-4 font-semibold text-slate-900">Responses</th>
-                    <th className="text-left py-4 px-4 font-semibold text-slate-900">Created</th>
-                    <th className="text-right py-4 px-4 font-semibold text-slate-900">Actions</th>
+                    <th className="text-left py-4 px-4 font-semibold text-slate-900">
+                      Survey
+                    </th>
+                    <th className="text-left py-4 px-4 font-semibold text-slate-900">
+                      Status
+                    </th>
+                    <th className="text-left py-4 px-4 font-semibold text-slate-900">
+                      Responses
+                    </th>
+                    <th className="text-left py-4 px-4 font-semibold text-slate-900">
+                      Created
+                    </th>
+                    <th className="text-right py-4 px-4 font-semibold text-slate-900">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredSurveys.map((survey, index) => (
-                    <motion.tr
+                    <tr
                       key={survey.$id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: index * 0.05 }}
                       className="border-b border-slate-100 hover:bg-slate-50 transition-colors"
                     >
                       <td className="py-4 px-4">
                         <div>
-                          <h4 className="font-medium text-slate-900">{survey.title}</h4>
+                          <h4 className="font-medium text-slate-900">
+                            {survey.title}
+                          </h4>
                           <p className="text-sm text-slate-600 mt-1">
                             {survey.description || "No description"}
                           </p>

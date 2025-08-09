@@ -23,7 +23,7 @@ function Signup() {
       setUser(user);
       
       toast.dismiss(loadingToast);
-      toast.success(`Welcome to SurveyPro, ${user.email}! 🎉`);
+      toast.success(`Welcome to NoxForm, ${user.email}! 🎉`);
       navigate("/dashboard");
     } catch (err) {
       toast.dismiss(loadingToast);

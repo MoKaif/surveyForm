@@ -2,17 +2,17 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { AppContext } from "../App";
-import { 
-  ArrowRight, 
-  CheckCircle, 
-  BarChart3, 
-  Users, 
-  Zap, 
+import {
+  ArrowRight,
+  CheckCircle,
+  BarChart3,
+  Users,
+  Zap,
   Shield,
   Sparkles,
   TrendingUp,
   Clock,
-  Globe
+  Globe,
 } from "lucide-react";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
@@ -24,40 +24,46 @@ function Home() {
     {
       icon: Zap,
       title: "Lightning Fast",
-      description: "Create beautiful surveys in minutes with our intuitive drag-and-drop builder."
+      description:
+        "Create beautiful surveys in minutes with our intuitive drag-and-drop builder.",
     },
     {
       icon: BarChart3,
       title: "Advanced Analytics",
-      description: "Get deep insights with real-time analytics and beautiful data visualizations."
+      description:
+        "Get deep insights with real-time analytics and beautiful data visualizations.",
     },
     {
       icon: Users,
       title: "Team Collaboration",
-      description: "Work together with your team to create and analyze surveys efficiently."
+      description:
+        "Work together with your team to create and analyze surveys efficiently.",
     },
     {
       icon: Shield,
       title: "Secure & Private",
-      description: "Your data is protected with enterprise-grade security and privacy controls."
+      description:
+        "Your data is protected with enterprise-grade security and privacy controls.",
     },
     {
       icon: Globe,
       title: "Global Reach",
-      description: "Share surveys worldwide with multi-language support and global CDN."
+      description:
+        "Share surveys worldwide with multi-language support and global CDN.",
     },
     {
       icon: Clock,
       title: "Real-time Results",
-      description: "See responses come in live with instant notifications and updates."
-    }
+      description:
+        "See responses come in live with instant notifications and updates.",
+    },
   ];
 
   const stats = [
     { label: "Surveys Created", value: "10K+", icon: BarChart3 },
     { label: "Active Users", value: "2.5K+", icon: Users },
     { label: "Responses Collected", value: "50K+", icon: TrendingUp },
-    { label: "Countries Reached", value: "25+", icon: Globe }
+    { label: "Countries Reached", value: "25+", icon: Globe },
   ];
 
   return (
@@ -68,7 +74,7 @@ function Home() {
         <div className="absolute inset-0 opacity-20">
           <div className="w-full h-full bg-gradient-to-r from-blue-500/10 to-purple-600/10 backdrop-blur-3xl"></div>
         </div>
-        
+
         <div className="relative max-w-7xl mx-auto">
           <div className="text-center">
             <motion.div
@@ -81,19 +87,20 @@ function Home() {
                 <Sparkles className="w-4 h-4" />
                 <span>New: Advanced Analytics Dashboard</span>
               </div>
-              
+
               <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-tight">
                 Create Powerful
                 <span className="block bg-gradient-to-r from-blue-400 via-purple-500 to-teal-400 bg-clip-text text-transparent">
                   Surveys & Forms
                 </span>
               </h1>
-              
+
               <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-                Build stunning surveys, collect valuable insights, and make data-driven decisions. 
-                Transform your feedback collection with our modern, intuitive platform.
+                Build stunning surveys, collect valuable insights, and make
+                data-driven decisions. Transform your feedback collection with
+                our modern, intuitive platform.
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
                 {user ? (
                   <Link to="/dashboard">
@@ -140,7 +147,9 @@ function Home() {
                   <div className="inline-flex items-center justify-center w-12 h-12 bg-primary-100 rounded-xl mb-4">
                     <Icon className="w-6 h-6 text-primary-600" />
                   </div>
-                  <div className="text-3xl font-bold text-slate-900 mb-2">{stat.value}</div>
+                  <div className="text-3xl font-bold text-slate-900 mb-2">
+                    {stat.value}
+                  </div>
                   <div className="text-slate-600 font-medium">{stat.label}</div>
                 </motion.div>
               );
@@ -162,7 +171,8 @@ function Home() {
               Everything you need to succeed
             </h2>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Powerful features designed to help you create, distribute, and analyze surveys with ease.
+              Powerful features designed to help you create, distribute, and
+              analyze surveys with ease.
             </p>
           </motion.div>
 
@@ -207,7 +217,9 @@ function Home() {
               Ready to get started?
             </h2>
             <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-              Join thousands of professionals who trust SurveyPro for their data collection needs.
+              Join thousands of professionals who trust{" "}
+              <span className="font-bold">NoxForm</span> for their data
+              collection needs.
             </p>
             {!user && (
               <div className="pt-4">

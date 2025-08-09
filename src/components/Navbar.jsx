@@ -2,18 +2,18 @@ import React, { useContext, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { AppContext } from "../App";
-import { 
-  BarChart3, 
-  Plus, 
-  User, 
-  LogOut, 
-  Menu, 
+import {
+  BarChart3,
+  Plus,
+  User,
+  LogOut,
+  Menu,
   X,
   Home,
-  Settings
+  Settings,
 } from "lucide-react";
 import Button from "./ui/Button";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 function Navbar() {
   const { user, handleLogout, loading } = useContext(AppContext);
@@ -24,19 +24,21 @@ function Navbar() {
   const handleLogoutClick = async () => {
     try {
       await handleLogout();
-      toast.success('Logged out successfully');
+      toast.success("Logged out successfully");
       navigate("/");
     } catch (error) {
-      toast.error('Logout failed');
+      toast.error("Logout failed");
     }
     setMobileMenuOpen(false);
   };
 
-  const navItems = user ? [
-    { to: "/", label: "Home", icon: Home },
-    { to: "/dashboard", label: "Dashboard", icon: BarChart3 },
-    { to: "/create", label: "Create Survey", icon: Plus },
-  ] : [];
+  const navItems = user
+    ? [
+        { to: "/", label: "Home", icon: Home },
+        { to: "/dashboard", label: "Dashboard", icon: BarChart3 },
+        { to: "/create", label: "Create Survey", icon: Plus },
+      ]
+    : [];
 
   const isActive = (path) => location.pathname === path;
 
@@ -45,15 +47,12 @@ function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link 
-            to="/" 
-            className="flex items-center space-x-2 group"
-          >
+          <Link to="/" className="flex items-center space-x-2 group">
             <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-purple-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
               <BarChart3 className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold text-slate-900 group-hover:text-primary-600 transition-colors">
-              SurveyPro
+              NoxForm
             </span>
           </Link>
 
@@ -68,8 +67,8 @@ function Navbar() {
                   to={item.to}
                   className={`flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                     active
-                      ? 'text-primary-600 bg-primary-50'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                      ? "text-primary-600 bg-primary-50"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -88,7 +87,7 @@ function Navbar() {
                     <User className="w-3 h-3 text-white" />
                   </div>
                   <span className="text-sm font-medium text-slate-700">
-                    {user.email?.split('@')[0]}
+                    {user.email?.split("@")[0]}
                   </span>
                 </div>
                 <Button
@@ -105,12 +104,12 @@ function Navbar() {
             ) : (
               <div className="flex items-center space-x-3">
                 <Link to="/login">
-                  <Button variant="ghost" size="sm">
+                  <Button variant="secondary" size="sm">
                     Login
                   </Button>
                 </Link>
                 <Link to="/signup">
-                  <Button variant="primary" size="sm">
+                  <Button variant="gradient" size="sm">
                     Sign Up
                   </Button>
                 </Link>
@@ -124,7 +123,11 @@ function Navbar() {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
             </button>
           </div>
         </div>
@@ -134,7 +137,7 @@ function Navbar() {
           {mobileMenuOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.2 }}
               className="md:hidden border-t border-slate-200 bg-white/95 backdrop-blur-sm"
@@ -150,8 +153,8 @@ function Navbar() {
                       onClick={() => setMobileMenuOpen(false)}
                       className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium transition-colors ${
                         active
-                          ? 'text-primary-600 bg-primary-50'
-                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                          ? "text-primary-600 bg-primary-50"
+                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                       }`}
                     >
                       <Icon className="w-4 h-4" />
@@ -159,7 +162,7 @@ function Navbar() {
                     </Link>
                   );
                 })}
-                
+
                 {user ? (
                   <div className="px-4 py-3 border-t border-slate-200 space-y-3">
                     <div className="flex items-center space-x-2">
@@ -181,21 +184,29 @@ function Navbar() {
                   </div>
                 ) : (
                   <div className="px-4 py-3 border-t border-slate-200 space-y-3">
-                    <Link 
+                    <Link
                       to="/login"
                       onClick={() => setMobileMenuOpen(false)}
                       className="block w-full"
                     >
-                      <Button variant="ghost" size="sm" className="w-full justify-start">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full justify-start"
+                      >
                         Login
                       </Button>
                     </Link>
-                    <Link 
+                    <Link
                       to="/signup"
                       onClick={() => setMobileMenuOpen(false)}
                       className="block w-full"
                     >
-                      <Button variant="primary" size="sm" className="w-full justify-start">
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        className="w-full justify-start"
+                      >
                         Sign Up
                       </Button>
                     </Link>

@@ -7,7 +7,7 @@ import { Clock, Users, CheckCircle, Send } from "lucide-react";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Badge from "../components/ui/Badge";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 const DB_ID = "68964345003049ffb81e";
 const SURVEYS_COLLECTION = "68964367002a59032b91";
@@ -21,7 +21,10 @@ function SurveyView() {
   const [loadingSurvey, setLoadingSurvey] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [theme, setTheme] = useState({ primary: "#3b82f6", secondary: "#e2e8f0" });
+  const [theme, setTheme] = useState({
+    primary: "#3b82f6",
+    secondary: "#e2e8f0",
+  });
 
   useEffect(() => {
     setLoadingSurvey(true);
@@ -40,7 +43,7 @@ function SurveyView() {
               questions = [];
             }
           }
-          
+
           // Parse theme
           let surveyTheme = { primary: "#3b82f6", secondary: "#e2e8f0" };
           if (doc.theme) {
@@ -50,7 +53,7 @@ function SurveyView() {
               // Use default theme
             }
           }
-          
+
           setSurvey({ ...doc, questions });
           setTheme(surveyTheme);
         })
@@ -77,12 +80,16 @@ function SurveyView() {
 
   const validateForm = () => {
     if (!survey || !survey.questions) return false;
-    
+
     for (let i = 0; i < survey.questions.length; i++) {
       const question = survey.questions[i];
       if (question.required) {
         const answer = answers[i];
-        if (!answer || (Array.isArray(answer) && answer.length === 0) || answer === "") {
+        if (
+          !answer ||
+          (Array.isArray(answer) && answer.length === 0) ||
+          answer === ""
+        ) {
           return false;
         }
       }
@@ -92,7 +99,7 @@ function SurveyView() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       toast.error("Please answer all required questions");
       return;
@@ -101,7 +108,7 @@ function SurveyView() {
     const loadingToast = toast.loading("Submitting your response...");
     setSubmitting(true);
     setLoading(true);
-    
+
     try {
       const dbModule = await import("../services/appwrite");
       const dbClient = new Databases(dbModule.default);
@@ -109,9 +116,9 @@ function SurveyView() {
         surveyId: id,
         answers: JSON.stringify(answers),
         createdAt: new Date().toISOString(),
-        submittedAt: Date.now(),
+        submittedAt: new Date().toISOString(),
       });
-      
+
       toast.dismiss(loadingToast);
       toast.success("Response submitted successfully! 🎉");
       setSubmitted(true);
@@ -142,8 +149,12 @@ function SurveyView() {
           <div className="w-16 h-16 bg-error-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-2xl">😞</span>
           </div>
-          <h2 className="text-xl font-semibold text-slate-900 mb-2">Survey not found</h2>
-          <p className="text-slate-600">The survey you're looking for doesn't exist or has been removed.</p>
+          <h2 className="text-xl font-semibold text-slate-900 mb-2">
+            Survey not found
+          </h2>
+          <p className="text-slate-600">
+            The survey you're looking for doesn't exist or has been removed.
+          </p>
         </Card>
       </div>
     );
@@ -156,8 +167,12 @@ function SurveyView() {
           <div className="w-16 h-16 bg-warning-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-2xl">⚠️</span>
           </div>
-          <h2 className="text-xl font-semibold text-slate-900 mb-2">Invalid Survey</h2>
-          <p className="text-slate-600">This survey has invalid or missing questions.</p>
+          <h2 className="text-xl font-semibold text-slate-900 mb-2">
+            Invalid Survey
+          </h2>
+          <p className="text-slate-600">
+            This survey has invalid or missing questions.
+          </p>
         </Card>
       </div>
     );
@@ -175,9 +190,12 @@ function SurveyView() {
             <div className="w-16 h-16 bg-success-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle className="w-8 h-8 text-success-600" />
             </div>
-            <h2 className="text-2xl font-semibold text-slate-900 mb-2">Thank you! 🎉</h2>
+            <h2 className="text-2xl font-semibold text-slate-900 mb-2">
+              Thank you! 🎉
+            </h2>
             <p className="text-slate-600 mb-4">
-              Your response has been submitted successfully. We appreciate your feedback!
+              Your response has been submitted successfully. We appreciate your
+              feedback!
             </p>
             <Badge variant="success">Response recorded</Badge>
           </Card>
@@ -187,7 +205,10 @@ function SurveyView() {
   }
 
   return (
-    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: theme.secondary }}>
+    <div
+      className="min-h-screen py-8 px-4 sm:px-6 lg:px-8"
+      style={{ backgroundColor: theme.secondary }}
+    >
       <div className="max-w-3xl mx-auto">
         {/* Survey Header */}
         <motion.div
@@ -196,9 +217,13 @@ function SurveyView() {
           transition={{ duration: 0.5 }}
         >
           <Card padding="lg" className="mb-8 text-center">
-            <h1 className="text-3xl font-bold text-slate-900 mb-4">{survey.title}</h1>
+            <h1 className="text-3xl font-bold text-slate-900 mb-4">
+              {survey.title}
+            </h1>
             {survey.description && (
-              <p className="text-lg text-slate-600 mb-6">{survey.description}</p>
+              <p className="text-lg text-slate-600 mb-6">
+                {survey.description}
+              </p>
             )}
             <div className="flex items-center justify-center space-x-6 text-sm text-slate-500">
               <div className="flex items-center space-x-1">
@@ -230,17 +255,22 @@ function SurveyView() {
                   className="space-y-4"
                 >
                   <div className="flex items-start space-x-3">
-                    <Badge 
-                      variant="primary" 
+                    <Badge
+                      variant="primary"
                       className="mt-1"
-                      style={{ backgroundColor: theme.primary + '20', color: theme.primary }}
+                      style={{
+                        backgroundColor: theme.primary + "20",
+                        color: theme.primary,
+                      }}
                     >
                       {idx + 1}
                     </Badge>
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold text-slate-900 mb-3">
                         {question.label}
-                        {question.required && <span className="text-error-500 ml-1">*</span>}
+                        {question.required && (
+                          <span className="text-error-500 ml-1">*</span>
+                        )}
                       </h3>
 
                       {question.type === "text" && (
@@ -250,9 +280,9 @@ function SurveyView() {
                           onChange={(e) => handleChange(idx, e.target.value)}
                           required={question.required}
                           className="w-full px-4 py-3 text-slate-900 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-opacity-50 transition-colors duration-200"
-                          style={{ 
+                          style={{
                             focusRingColor: theme.primary,
-                            '--tw-ring-color': theme.primary + '50'
+                            "--tw-ring-color": theme.primary + "50",
                           }}
                           placeholder="Enter your answer..."
                         />
@@ -286,7 +316,9 @@ function SurveyView() {
                                 className="w-4 h-4 border-slate-300 focus:ring-2 focus:ring-opacity-50"
                                 style={{ color: theme.primary }}
                               />
-                              <span className="text-slate-700 font-medium">{opt}</span>
+                              <span className="text-slate-700 font-medium">
+                                {opt}
+                              </span>
                             </label>
                           ))}
                         </div>
@@ -310,7 +342,9 @@ function SurveyView() {
                                 className="w-4 h-4 border-slate-300 rounded focus:ring-2 focus:ring-opacity-50"
                                 style={{ color: theme.primary }}
                               />
-                              <span className="text-slate-700 font-medium">{opt}</span>
+                              <span className="text-slate-700 font-medium">
+                                {opt}
+                              </span>
                             </label>
                           ))}
                         </div>
@@ -323,12 +357,11 @@ function SurveyView() {
               <div className="flex justify-end pt-6 border-t border-slate-200">
                 <Button
                   type="submit"
-                  variant="primary"
+                  variant="gradient"
                   size="lg"
                   loading={submitting}
                   disabled={submitting}
                   className="min-w-[140px]"
-                  style={{ backgroundColor: theme.primary }}
                 >
                   <Send className="w-4 h-4 mr-2" />
                   {submitting ? "Submitting..." : "Submit Response"}
