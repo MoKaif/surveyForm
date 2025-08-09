@@ -13,7 +13,7 @@ import SurveyResponses from "./pages/SurveyResponses";
 
 function AppRouter() {
   return (
-    <Router>
+    <Router basename="/NoxForm">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
