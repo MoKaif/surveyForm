@@ -1,7 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Databases, ID } from "appwrite";
 import { AppContext } from "../App";
+import { Clock, Users, CheckCircle, Send } from "lucide-react";
+import Button from "../components/ui/Button";
+import Card from "../components/ui/Card";
+import Badge from "../components/ui/Badge";
+import toast from 'react-hot-toast';
 
 const DB_ID = "68964345003049ffb81e";
 const SURVEYS_COLLECTION = "68964367002a59032b91";
@@ -9,11 +15,13 @@ const RESPONSES_COLLECTION = "6896ab8c000cedeab96d";
 
 function SurveyView() {
   const { id } = useParams();
-  const { showToast, setLoading } = useContext(AppContext);
+  const { setLoading } = useContext(AppContext);
   const [survey, setSurvey] = useState(null);
   const [answers, setAnswers] = useState({});
   const [loadingSurvey, setLoadingSurvey] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [theme, setTheme] = useState({ primary: "#3b82f6", secondary: "#e2e8f0" });
 
   useEffect(() => {
     setLoadingSurvey(true);
@@ -32,12 +40,24 @@ function SurveyView() {
               questions = [];
             }
           }
+          
+          // Parse theme
+          let surveyTheme = { primary: "#3b82f6", secondary: "#e2e8f0" };
+          if (doc.theme) {
+            try {
+              surveyTheme = JSON.parse(doc.theme);
+            } catch {
+              // Use default theme
+            }
+          }
+          
           setSurvey({ ...doc, questions });
+          setTheme(surveyTheme);
         })
-        .catch((err) => showToast(err.message || "Survey not found", "error"))
+        .catch((err) => toast.error(err.message || "Survey not found"))
         .finally(() => setLoadingSurvey(false));
     });
-  }, [id, showToast]);
+  }, [id]);
 
   const handleChange = (qIdx, value) => {
     setAnswers((a) => ({ ...a, [qIdx]: value }));
@@ -55,10 +75,33 @@ function SurveyView() {
     });
   };
 
+  const validateForm = () => {
+    if (!survey || !survey.questions) return false;
+    
+    for (let i = 0; i < survey.questions.length; i++) {
+      const question = survey.questions[i];
+      if (question.required) {
+        const answer = answers[i];
+        if (!answer || (Array.isArray(answer) && answer.length === 0) || answer === "") {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      toast.error("Please answer all required questions");
+      return;
+    }
+
+    const loadingToast = toast.loading("Submitting your response...");
     setSubmitting(true);
     setLoading(true);
+    
     try {
       const dbModule = await import("../services/appwrite");
       const dbClient = new Databases(dbModule.default);
@@ -66,126 +109,235 @@ function SurveyView() {
         surveyId: id,
         answers: JSON.stringify(answers),
         createdAt: new Date().toISOString(),
+        submittedAt: Date.now(),
       });
-      showToast("Response submitted!", "success");
-      setAnswers({});
+      
+      toast.dismiss(loadingToast);
+      toast.success("Response submitted successfully! 🎉");
+      setSubmitted(true);
     } catch (err) {
-      showToast(err.message || "Failed to submit response", "error");
+      toast.dismiss(loadingToast);
+      toast.error(err.message || "Failed to submit response");
     } finally {
       setSubmitting(false);
       setLoading(false);
     }
   };
 
-  if (loadingSurvey)
+  if (loadingSurvey) {
     return (
-      <div style={{ textAlign: "center", margin: 32 }}>Loading survey...</div>
-    );
-  if (!survey)
-    return (
-      <div style={{ textAlign: "center", margin: 32, color: "#e74c3c" }}>
-        Survey not found.
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin"></div>
+          <span className="text-slate-600 font-medium">Loading survey...</span>
+        </div>
       </div>
     );
+  }
+
+  if (!survey) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <Card padding="lg" className="text-center max-w-md">
+          <div className="w-16 h-16 bg-error-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-2xl">😞</span>
+          </div>
+          <h2 className="text-xl font-semibold text-slate-900 mb-2">Survey not found</h2>
+          <p className="text-slate-600">The survey you're looking for doesn't exist or has been removed.</p>
+        </Card>
+      </div>
+    );
+  }
+
   if (!Array.isArray(survey.questions)) {
     return (
-      <div style={{ textAlign: "center", margin: 32, color: "#e74c3c" }}>
-        Survey questions are missing or invalid.
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <Card padding="lg" className="text-center max-w-md">
+          <div className="w-16 h-16 bg-warning-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-2xl">⚠️</span>
+          </div>
+          <h2 className="text-xl font-semibold text-slate-900 mb-2">Invalid Survey</h2>
+          <p className="text-slate-600">This survey has invalid or missing questions.</p>
+        </Card>
+      </div>
+    );
+  }
+
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Card padding="lg" className="text-center max-w-md">
+            <div className="w-16 h-16 bg-success-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="w-8 h-8 text-success-600" />
+            </div>
+            <h2 className="text-2xl font-semibold text-slate-900 mb-2">Thank you! 🎉</h2>
+            <p className="text-slate-600 mb-4">
+              Your response has been submitted successfully. We appreciate your feedback!
+            </p>
+            <Badge variant="success">Response recorded</Badge>
+          </Card>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div style={{ maxWidth: 700, margin: "2rem auto" }}>
-      <h2 style={{ fontSize: "2rem", marginBottom: 8 }}>{survey.title}</h2>
-      <p style={{ color: "#555", marginBottom: 24 }}>{survey.description}</p>
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          background: "#fff",
-          padding: 24,
-          borderRadius: 8,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
-          marginBottom: 32,
-        }}
-      >
-        {survey.questions.map((q, idx) => (
-          <div key={idx} style={{ marginBottom: 18 }}>
-            <div style={{ fontWeight: 500, marginBottom: 6 }}>
-              {q.label}
-              {q.required && <span style={{ color: "#e74c3c" }}> *</span>}
-            </div>
-            {q.type === "text" && (
-              <input
-                type="text"
-                value={answers[idx] || ""}
-                onChange={(e) => handleChange(idx, e.target.value)}
-                required={q.required}
-                style={{ width: "60%", padding: 6 }}
-              />
+    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: theme.secondary }}>
+      <div className="max-w-3xl mx-auto">
+        {/* Survey Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Card padding="lg" className="mb-8 text-center">
+            <h1 className="text-3xl font-bold text-slate-900 mb-4">{survey.title}</h1>
+            {survey.description && (
+              <p className="text-lg text-slate-600 mb-6">{survey.description}</p>
             )}
-            {q.type === "mcq" &&
-              q.options.map((opt, oIdx) => (
-                <div key={oIdx}>
-                  <label>
-                    <input
-                      type="radio"
-                      name={`q${idx}`}
-                      value={opt}
-                      checked={answers[idx] === opt}
-                      onChange={() => handleChange(idx, opt)}
-                      required={q.required}
-                    />{" "}
-                    {opt}
-                  </label>
-                </div>
+            <div className="flex items-center justify-center space-x-6 text-sm text-slate-500">
+              <div className="flex items-center space-x-1">
+                <Clock className="w-4 h-4" />
+                <span>~{Math.max(2, survey.questions.length)} min</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Users className="w-4 h-4" />
+                <span>{survey.questions.length} questions</span>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
+
+        {/* Survey Form */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          <Card padding="lg">
+            <form onSubmit={handleSubmit} className="space-y-8">
+              {survey.questions.map((question, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: idx * 0.1 }}
+                  className="space-y-4"
+                >
+                  <div className="flex items-start space-x-3">
+                    <Badge 
+                      variant="primary" 
+                      className="mt-1"
+                      style={{ backgroundColor: theme.primary + '20', color: theme.primary }}
+                    >
+                      {idx + 1}
+                    </Badge>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-slate-900 mb-3">
+                        {question.label}
+                        {question.required && <span className="text-error-500 ml-1">*</span>}
+                      </h3>
+
+                      {question.type === "text" && (
+                        <input
+                          type="text"
+                          value={answers[idx] || ""}
+                          onChange={(e) => handleChange(idx, e.target.value)}
+                          required={question.required}
+                          className="w-full px-4 py-3 text-slate-900 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-opacity-50 transition-colors duration-200"
+                          style={{ 
+                            focusRingColor: theme.primary,
+                            '--tw-ring-color': theme.primary + '50'
+                          }}
+                          placeholder="Enter your answer..."
+                        />
+                      )}
+
+                      {question.type === "textarea" && (
+                        <textarea
+                          value={answers[idx] || ""}
+                          onChange={(e) => handleChange(idx, e.target.value)}
+                          required={question.required}
+                          rows={4}
+                          className="w-full px-4 py-3 text-slate-900 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-opacity-50 transition-colors duration-200"
+                          placeholder="Enter your detailed answer..."
+                        />
+                      )}
+
+                      {question.type === "mcq" && (
+                        <div className="space-y-3">
+                          {question.options.map((opt, oIdx) => (
+                            <label
+                              key={oIdx}
+                              className="flex items-center space-x-3 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer transition-colors"
+                            >
+                              <input
+                                type="radio"
+                                name={`q${idx}`}
+                                value={opt}
+                                checked={answers[idx] === opt}
+                                onChange={() => handleChange(idx, opt)}
+                                required={question.required}
+                                className="w-4 h-4 border-slate-300 focus:ring-2 focus:ring-opacity-50"
+                                style={{ color: theme.primary }}
+                              />
+                              <span className="text-slate-700 font-medium">{opt}</span>
+                            </label>
+                          ))}
+                        </div>
+                      )}
+
+                      {question.type === "checkbox" && (
+                        <div className="space-y-3">
+                          {question.options.map((opt, oIdx) => (
+                            <label
+                              key={oIdx}
+                              className="flex items-center space-x-3 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer transition-colors"
+                            >
+                              <input
+                                type="checkbox"
+                                value={opt}
+                                checked={
+                                  Array.isArray(answers[idx]) &&
+                                  answers[idx].includes(opt)
+                                }
+                                onChange={() => handleCheckboxChange(idx, opt)}
+                                className="w-4 h-4 border-slate-300 rounded focus:ring-2 focus:ring-opacity-50"
+                                style={{ color: theme.primary }}
+                              />
+                              <span className="text-slate-700 font-medium">{opt}</span>
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
               ))}
-            {q.type === "checkbox" &&
-              q.options.map((opt, oIdx) => (
-                <div key={oIdx}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      name={`q${idx}`}
-                      value={opt}
-                      checked={
-                        Array.isArray(answers[idx]) &&
-                        answers[idx].includes(opt)
-                      }
-                      onChange={() => handleCheckboxChange(idx, opt)}
-                      required={
-                        q.required &&
-                        (!answers[idx] || answers[idx].length === 0)
-                      }
-                    />{" "}
-                    {opt}
-                  </label>
-                </div>
-              ))}
-          </div>
-        ))}
-        <div style={{ textAlign: "right" }}>
-          <button type="submit" className="cta-btn" disabled={submitting}>
-            {submitting ? "Submitting..." : "Submit Response"}
-          </button>
-        </div>
-        <style>{`
-          .cta-btn {
-            background: #3498db;
-            color: #fff;
-            padding: 0.6rem 1.5rem;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 500;
-            border: none;
-            transition: background 0.2s;
-          }
-          .cta-btn:hover {
-            background: #217dbb;
-          }
-        `}</style>
-      </form>
+
+              <div className="flex justify-end pt-6 border-t border-slate-200">
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="lg"
+                  loading={submitting}
+                  disabled={submitting}
+                  className="min-w-[140px]"
+                  style={{ backgroundColor: theme.primary }}
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  {submitting ? "Submitting..." : "Submit Response"}
+                </Button>
+              </div>
+            </form>
+          </Card>
+        </motion.div>
+      </div>
     </div>
   );
 }
