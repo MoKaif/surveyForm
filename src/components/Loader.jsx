@@ -1,24 +1,27 @@
-import React from "react";
+import React from 'react';
+import { motion } from 'framer-motion';
 
 function Loader() {
   return (
-    <div style={{ textAlign: "center", margin: "2rem" }}>
-      <div className="loader" />
-      <style>{`
-        .loader {
-          border: 4px solid #f3f3f3;
-          border-top: 4px solid #3498db;
-          border-radius: 50%;
-          width: 36px;
-          height: 36px;
-          animation: spin 1s linear infinite;
-          margin: 0 auto;
-        }
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}</style>
+    <div className="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
+      <motion.div 
+        className="flex flex-col items-center space-y-4"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="relative">
+          <div className="w-12 h-12 rounded-full border-4 border-primary-200"></div>
+          <div className="w-12 h-12 rounded-full border-4 border-primary-600 border-t-transparent absolute top-0 left-0 animate-spin"></div>
+        </div>
+        <motion.p 
+          className="text-slate-600 font-medium"
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          Loading...
+        </motion.p>
+      </motion.div>
     </div>
   );
 }
